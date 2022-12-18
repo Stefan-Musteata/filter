@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import data from './data.js';
-import { List, Form } from './index.js'
+import data from './data';
+import { List, Form } from './index'
 
 
 function Filter(props) {
@@ -50,10 +50,20 @@ function Filter(props) {
     }
   }
 
+  //Handle clear input search 
+  const handleClear = () => {
+    setKeyword('');
+    history.push(``)
+  }
+
   return (
     <div className="container">
       {/* Form */}
-      <Form filter={filter} keyword={keyword} handleSearch={handleSearch} />
+      <Form
+        filter={filter}
+        keyword={keyword}
+        handleSearch={handleSearch}
+        handleClear={handleClear} />
 
       {/* List of people */}
       <List teams={teams} />
