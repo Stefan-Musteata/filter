@@ -1,46 +1,63 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import data from './data.js'
+import data from './data.js';
+import { List, Form } from './index.js'
+
 
 function Filter(props) {
-      const history = useHistory();
-      const [teams, setTeams] = useState(data);
-      const [keyword, setKeyword] = useState("");
+  //useHistory
+  const history = useHistory();
 
-      useEffect(() => {
-        const keyword = props.location.search.split('?').slice(1).join("?")
-        console.log(keyword)
-        const test = data.filter(team => {
-          return team.toLowerCase().includes(keyword.toLowerCase());
-        });
-        setTeams(test)
-        setKeyword(keyword)
+  //UseState
+  const [teams, setTeams] = useState(data);
+  const [keyword, setKeyword] = useState("");
 
-      }, [props.location.search]);
+  //useEffect
+  useEffect(() => {
 
-      const filter = (e) => {
-        const test = data.filter(team => {
-            return team.toLowerCase().includes(e.target.value.toLowerCase());
-          });
+    ///keywords in search input
+    const keyword = props.location.search.split('?').slice(1).join("?")
 
-          setTeams(test);
-          setKeyword(e.target.value);
-      }
+    //Data filter
+    const data_filter = data.filter(team => {
+      return team.toLowerCase().includes(keyword.toLowerCase());
+    });
 
-      const handleSearch = (e) => {
-        e.preventDefault()
-        console.log(keyword);
-        if(keyword) {
-          history.push(`?${keyword}`) 
-        }
-      }
+    //useState
+    setTeams(data_filter)
+    setKeyword(keyword)
 
-      
+  }, [props.location.search]);
+
+  //Filter
+  const filter = (e) => {
+    const data_filter = data.filter(team => {
+      return team.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+
+    setTeams(data_filter);
+    setKeyword(e.target.value);
+
+    history.push(`?${e.target.value}`)
+  }
+
+  //HandleSearch
+  const handleSearch = (e) => {
+    e.preventDefault()
+
+    if (keyword) {
+      history.push(`?${keyword}`)
+    }
+  }
+
   return (
-    <div className="App">
-      <input onChange={filter} type="text" value={keyword} />
-      <button type="button" onClick={handleSearch}>Search</button>
-      {teams.map((team, i) => ( <p key={i}>{team}</p> ))}
+    <div className="container">
+      {/* Form */}
+      <Form filter={filter} keyword={keyword} handleSearch={handleSearch} />
+
+      {/* List of people */}
+      <List teams={teams} />
+
     </div>
   );
 }
